@@ -14,7 +14,7 @@ function get_type (symbol) {
     if (symbol.isBuiltin()) {
         classType += "Built-In ";
     }
-    
+
     if (symbol.isNamespace) {
         if (symbol.is('FUNCTION')) {
             classType += "Function ";
@@ -80,19 +80,19 @@ function resolveLinks(str, from) {
     return str;
 }
 
-function publish(symbolSet) {    
+function publish(symbolSet) {
     var base = JSDOC.opt._[0];
     if (base.charAt(base.length-1) == '/') {
         base = base.slice(0, -1);
     }
-    
+
     publish.conf = {  // trailing slash expected for dirs
         ext:         ".html", // ===> .rst
         outDir:      JSDOC.opt.d || SYS.pwd+"../out/jsdoc/",
         templatesDir: JSDOC.opt.t || SYS.pwd+"../templates/jsdoc/",
         symbolsDir:  "symbols/"
     };
-        
+
     // used to allow Link to check the details of things being linked to
     Link.symbolSet = symbolSet;
 
@@ -107,63 +107,75 @@ function publish(symbolSet) {
         print("Couldn't create the required templates: "+e);
         quit();
     }
-    
+
     // get an array version of the symbolset, useful for filtering
     var symbols = symbolSet.toArray();
-    
+
     // get a list of all the classes in the symbolset
     var classes = symbols.filter(isaClass).sort(makeSortby("alias"));
-    
+
     // create a filemap in which outfiles must be to be named uniquely, ignoring case
     if (JSDOC.opt.u) {
         var filemapCounts = {};
         Link.filemap = {};
         for (var i = 0, l = classes.length; i < l; i++) {
             var lcAlias = classes[i].alias.toLowerCase();
-            
+
             if (!filemapCounts[lcAlias]) filemapCounts[lcAlias] = 1;
             else filemapCounts[lcAlias]++;
-            
-            Link.filemap[classes[i].alias] = 
+
+            Link.filemap[classes[i].alias] =
                 (filemapCounts[lcAlias] > 1)?
                 lcAlias+"_"+filemapCounts[lcAlias] : lcAlias;
         }
     }
-    
+
     var tocnames = new Array();
-    
+
     // create each of the class pages
     for (var i = 0, l = classes.length; i < l; i++) {
         var symbol = classes[i];
-        
+
         symbol.events = symbol.getEvents();   // 1 order matters
         symbol.methods = symbol.getMethods(); // 2
-        
+
         template = templates['class'].process(symbol);
-            
+
         var dir = publish.conf.outDir.slice(0, -1);
         var source = symbol.srcFile.replace(base, '').split('/').slice(0, -1).join('/');
         var docdir = new File(dir + source);
         docdir.mkdirs();
         var basename = ((JSDOC.opt.u) ? Link.filemap[symbol.alias] : symbol.alias);
         var filename = basename + '.rst';
-        
+
         var tocname = source + '/' + basename;
         if (tocname.charAt(0) == '/') {
             tocname = tocname.slice(1);
         }
         tocnames.push(tocname);
-        
+
         IO.saveFile(docdir, filename, template);
     }
-    
+
     tocnames.sort();
     var symbols = {};
     symbols.entries = tocnames;
     template = templates['toc'].process(symbols);
     IO.saveFile(publish.conf.outDir, 'toc.rst', template);
-    
-    var base = JSDOC.opt._[0];   
+
+    var base = JSDOC.opt._[0];
     // get an array version of the symbolset, useful for filtering
     var symbols = symbolSet.toArray();
+}
+
+/**
+ * Replaces html tags to corresponing rst notations in specified string.
+ *
+ * @param {String} str string that will be converted to rst.
+ * @return {String} rst string.
+ */
+function html_to_rst(str)
+{
+	var retval = str.replace('<p>', '\n');
+	return retval;
 }
