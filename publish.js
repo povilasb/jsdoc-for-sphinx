@@ -176,6 +176,6 @@ function publish(symbolSet) {
  */
 function html_to_rst(str)
 {
-	var retval = str.replace('<p>', '\n');
+	var retval = str.replace(/<p>/g, '\n');
 	return retval;
 }
