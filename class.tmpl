@@ -11,7 +11,7 @@
 .. class-title
 
 <if test="!data.isBuiltin() && (data.isNamespace || data.is('CONSTRUCTOR'))">
-{+ data.classDesc +}
+{! output += html_to_rst(data.classDesc); !}
 
 <if test="data.deprecated">
 .. deprecated:: {+ data.deprecated +}
@@ -48,7 +48,7 @@ Examples
 Constructor
 -----------
 
-{+ data.desc +}
+{! output += html_to_rst(data.desc); !}
 
 .. js:class:: {+ data.alias +}<if test="get_type(data) != 'Namespace '">{+ makeSignature(data.params) +}</if>
 
