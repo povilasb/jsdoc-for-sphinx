@@ -1,0 +1,23 @@
+<if test="data.classes">
+
+{+ data.alias +}
+{!
+	for (var i = 0; i < data.alias.length; i++)
+	{
+		output += '=';
+	}
+	output += '\n';
+!}
+
+.. toctree::
+    :maxdepth: 1
+
+{!
+	for (var i = 0; i < data.classes.length; i++)
+	{
+		output += "    " + data.classes[i] + '\n';
+	}
+!}
+
+</if>
+
