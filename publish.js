@@ -4,7 +4,8 @@
 
 function hasNoParent($) {return ($.memberOf == "")}
 function isaFile($) {return ($.is("FILE"))}
-function isaClass($) {return ($.is("CONSTRUCTOR") || $.isNamespace)}
+function isaClass($) {return ($.is("CONSTRUCTOR"))}
+function isaNamespace($) {if ($.alias == '_global_') return false; return $.isNamespace; }
 
 var partials = {};
 
@@ -95,6 +96,7 @@ function publish(symbolSet) {
     try {
         var templates = {
             'class': new JSDOC.JsPlate(publish.conf.templatesDir + "class.tmpl"),
+            'namespace': new JSDOC.JsPlate(publish.conf.templatesDir + "namespace.tmpl"),
             'toc': new JSDOC.JsPlate(publish.conf.templatesDir + "toc.tmpl")
         }
     }
@@ -108,6 +110,11 @@ function publish(symbolSet) {
 
     // get a list of all the classes in the symbolset
     var classes = symbols.filter(isaClass).sort(makeSortby("alias"));
+    var namespaces = symbols.filter(isaNamespace);
+    var namespace_classes = {"" : []};
+    for (var i = 0, l = namespaces.length; i < l; i++) {
+        namespace_classes[namespaces[i].alias] = [];
+    }
 
     // create a filemap in which outfiles must be to be named uniquely, ignoring case
     if (JSDOC.opt.u) {
@@ -125,8 +132,6 @@ function publish(symbolSet) {
         }
     }
 
-    var tocnames = new Array();
-
     // create each of the class pages
     for (var i = 0, l = classes.length; i < l; i++) {
         var symbol = classes[i];
@@ -143,20 +148,32 @@ function publish(symbolSet) {
         var basename = ((JSDOC.opt.u) ? Link.filemap[symbol.alias] : symbol.alias);
         var filename = basename + '.rst';
 
-        var tocname = source + '/' + basename;
-        if (tocname.charAt(0) == '/') {
-            tocname = tocname.slice(1);
-        }
-        tocnames.push(tocname);
+        namespace_classes[symbol.memberOf].push(symbol.alias);
 
         IO.saveFile(docdir, filename, template);
     }
 
-    tocnames.sort();
+    for (var i = 0, l = namespaces.length; i < l; i++) {
+        var symbol = namespaces[i];
+        symbol.classes = namespace_classes[symbol.alias];
+
+        template = templates['namespace'].process(symbol);
+
+        var dir = publish.conf.outDir.slice(0, -1);
+        var source = symbol.srcFile.replace(base, '').split('/').slice(0, -1).join("");
+        var docdir = new File(dir + "/" + source);
+        docdir.mkdirs();
+        var filename = symbol.alias + '.rst';
+
+        symbol.relative_path = source;
+
+        IO.saveFile(docdir, filename, template);
+    }
+
     var symbols = {};
-    symbols.entries = tocnames;
+    symbols.namespaces = namespaces;
     template = templates['toc'].process(symbols);
-    IO.saveFile(publish.conf.outDir, 'toc.rst', template);
+    IO.saveFile(publish.conf.outDir, 'namespaces.rst', template);
 
     var base = JSDOC.opt._[0];
     // get an array version of the symbolset, useful for filtering
