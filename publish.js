@@ -75,11 +75,6 @@ function makeSignature(params) {
     return signature;
 }
 
-function resolveLinks(str, from) {
-    // deprecated
-    return str;
-}
-
 function publish(symbolSet) {
     var base = JSDOC.opt._[0];
     if (base.charAt(base.length-1) == '/') {
@@ -177,5 +172,24 @@ function publish(symbolSet) {
 function html_to_rst(str)
 {
 	var retval = str.replace(/<p>/g, '\n');
+	return retval;
+}
+
+/**
+ * Replaces @link tags inside specified str to appropriate rst code.
+ * E.g. {@link method visibleName} would be replaced with
+ * js:ref:`visibleName <method>`.
+ * method and visibleName are single words and can not containt spaces.
+ * a-z, A-Z, _, - , 0-9 symbols are allowed.
+ *
+ * @param {String} str string containing jsdDoc tags.
+ * @return {String} string with replaced @link tags.
+ */
+function resolve_links(str)
+{
+	var patt1 = new RegExp("\{@link (.+?) (.+?)\}", "gm")
+	var patt2 = new RegExp("\{@link (.+?)\}", "gm")
+	var retval = str.replace(patt1, "js:ref:`$2 <$1>`")
+	var retval = retval.replace(patt2, "js:ref:`$1`")
 	return retval;
 }
