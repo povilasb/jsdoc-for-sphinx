@@ -196,7 +196,7 @@ function html_to_rst(str)
  * Replaces @link tags inside specified str to appropriate rst code.
  * E.g. {@link method visibleName} would be replaced with
  * js:ref:`visibleName <method>`.
- * method and visibleName are single words and can not containt spaces.
+ * method and visibleName are single words and can not contain spaces.
  * a-z, A-Z, _, - , 0-9 symbols are allowed.
  *
  * @param {String} str string containing jsdDoc tags.
@@ -206,7 +206,9 @@ function resolve_links(str)
 {
 	var patt1 = new RegExp("\{@link (.+?) (.+?)\}", "gm")
 	var patt2 = new RegExp("\{@link (.+?)\}", "gm")
+
 	var retval = str.replace(patt1, ":js:ref:`$2 <$1>`")
 	var retval = retval.replace(patt2, ":js:ref:`$1`")
+
 	return retval;
 }
