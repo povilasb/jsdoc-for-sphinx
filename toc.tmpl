@@ -1,12 +1,13 @@
 ###################
-JsDoc Reference
+Namespaces
 ###################
 
-<if test="data.entries">
+<if test="data.namespaces">
 
 .. toctree::
+    :maxdepth: 2
 
-<for each="entry" in="data.entries">
-    {+ entry +}</for>
+<for each="ns" in="data.namespaces">
+    {+ ns.relative_path +}<if test="ns.relative_path != ''">/</if>{+ ns.alias +} </for>
 
 </if>
