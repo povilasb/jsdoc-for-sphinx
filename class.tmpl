@@ -11,7 +11,7 @@
 .. class-title
 
 <if test="!data.isBuiltin() && (data.isNamespace || data.is('CONSTRUCTOR'))">
-{! output += html_to_rst(data.classDesc); !}
+{! output += html_to_rst(resolve_links(data.classDesc)); !}
 
 <if test="data.deprecated">
 .. deprecated:: {+ data.deprecated +}
@@ -48,7 +48,7 @@ Examples
 Constructor
 -----------
 
-{! output += html_to_rst(data.desc); !}
+{! output += html_to_rst(resolve_links(data.desc)); !}
 
 .. js:class:: {+ data.alias +}<if test="get_type(data) != 'Namespace '">{+ makeSignature(data.params) +}</if>
 
@@ -91,22 +91,22 @@ Methods
 		output+=data.returns[0].type + " ";
 	!}{+ data.name +}<if test="get_type(data) != 'Namespace '">{+ makeSignature(data.params) +}</if>
 
-{+ indentLines(data.desc, 4) +}
+{+ indentLines(resolve_links(data.desc), 4) +}
 
 <if test="data.params.length">
     <for each="item" in="data.params">
     :param<if test="item.type"> {+ item.type +}</if><if test="item.name"> {+ item.name +}</if>:
-{+ indentLines(item.desc, 8) +} <if test="item.defaultValue">(*Default*: {+item.defaultValue+})</if>
+{+ indentLines(resolve_links(item.desc), 8) +} <if test="item.defaultValue">(*Default*: {+item.defaultValue+})</if>
     </for>
 </if>
 <if test="data.exceptions.length">
     <for each="item" in="data.exceptions">
     :throws<if test="item.type"> {+ item.type +}</if>:
-        <if test="item.name">{+ item.name +}: </if>{+ item.desc +}
+        <if test="item.name">{+ item.name +}: </if>{+ resolve_links(item.desc) +}
     </for>
 </if>
 <if test="data.returns.length">
-    <if test="data.returns[0].desc">:returns: {+ data.returns[0].desc +}</if>
+    <if test="data.returns[0].desc">:returns: {+ resolve_links(data.returns[0].desc) +}</if>
 </if>
 
 <if test="data.deprecated">
