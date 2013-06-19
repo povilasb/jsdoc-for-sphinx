@@ -189,7 +189,7 @@ function publish(symbolSet) {
 function html_to_rst(str)
 {
 	/* delete new line symbols */
-	var retval =  str.replace(/\n/g, '');
+	var retval =  str.replace(/\n/g, ' ');
 	retval = retval.replace(/<p>/g, '\n');
 
 	retval = retval.replace(/<ul>/g, '\n..\n');
