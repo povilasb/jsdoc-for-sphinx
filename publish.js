@@ -110,7 +110,7 @@ function publish(symbolSet) {
 
     // get a list of all the classes in the symbolset
     var classes = symbols.filter(isaClass).sort(makeSortby("alias"));
-    var namespaces = symbols.filter(isaNamespace);
+    var namespaces = symbols.filter(isaNamespace).sort(makeSortby("alias"));
     var namespace_classes = {"" : []};
     for (var i = 0, l = namespaces.length; i < l; i++) {
         namespace_classes[namespaces[i].alias] = [];
