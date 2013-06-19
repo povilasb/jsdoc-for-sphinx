@@ -188,7 +188,14 @@ function publish(symbolSet) {
  */
 function html_to_rst(str)
 {
-	var retval = str.replace(/<p>/g, '\n');
+	/* delete new line symbols */
+	var retval =  str.replace(/\n/g, '');
+	retval = retval.replace(/<p>/g, '\n');
+
+	retval = retval.replace(/<ul>/g, '\n..\n');
+	retval = retval.replace(/<\/ul>/g, '\n');
+	retval = retval.replace(/<li>/g, '\n* ');
+
 	return retval;
 }
 
@@ -207,8 +214,8 @@ function resolve_links(str)
 	var patt1 = new RegExp("\{@link (.+?) (.+?)\}", "gm")
 	var patt2 = new RegExp("\{@link (.+?)\}", "gm")
 
-	var retval = str.replace(patt1, ":js:ref:`$2 <$1>`")
-	var retval = retval.replace(patt2, ":js:ref:`$1`")
+	var retval = str.replace(patt1, "\\ :js:ref:`$2 <$1>`\\")
+	var retval = retval.replace(patt2, "\\ :js:ref:`$1`\\")
 
 	return retval;
 }
