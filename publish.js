@@ -214,8 +214,8 @@ function resolve_links(str)
 	var patt1 = new RegExp("\{@link (.+?) (.+?)\}", "gm")
 	var patt2 = new RegExp("\{@link (.+?)\}", "gm")
 
-	var retval = str.replace(patt1, "\\ :js:ref:`$2 <$1>`\\")
-	var retval = retval.replace(patt2, "\\ :js:ref:`$1`\\")
+	var retval = str.replace(patt1, "\\ :js:ref:`$2 <$1>`\\ ")
+	var retval = retval.replace(patt2, "\\ :js:ref:`$1`\\ ")
 
 	return retval;
 }
