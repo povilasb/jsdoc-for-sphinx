@@ -65,13 +65,13 @@ Constructor
 <if test="data.exceptions.length">
     <for each="item" in="data.exceptions">
     :throws<if test="item.type"> {+ item.type +}</if>:
-        <if test="item.name">{+ item.name +}: </if>{+ item.desc +}
+        <if test="item.name">{+ item.name +}: </if>{+ html_to_rst(resolve_links(item.desc)) +}
     </for>
 </if>
 <if test="data.returns.length">
     <for each="item" in="data.returns">
     :returns {+ item.type +}:
-        {+ item.desc +}
+        {+ html_to_rst(resolve_links(item.desc)) +}
     </for>
 </if>
 
@@ -103,11 +103,11 @@ Methods
 <if test="data.exceptions.length">
     <for each="item" in="data.exceptions">
     :throws<if test="item.type"> {+ item.type +}</if>:
-        <if test="item.name">{+ item.name +}: </if>{+ resolve_links(item.desc) +}
+        <if test="item.name">{+ item.name +}: </if>{+ html_to_rst(resolve_links(item.desc)) +}
     </for>
 </if>
 <if test="data.returns.length">
-    <if test="data.returns[0].desc">:returns: {+ resolve_links(data.returns[0].desc) +}</if>
+    <if test="data.returns[0].desc">:returns: {+ html_to_rst(resolve_links(data.returns[0].desc)) +}</if>
 </if>
 
 <if test="data.deprecated">
