@@ -26,8 +26,9 @@
 </if>
 <if test="data.see.length">
 .. seealso::
+    <for each="item" in="data.see">{+ item +}
 
-    <for each="item" in="data.see">{+ item +}</for>
+    </for>
 </if>
 
 <if test="data.author">
