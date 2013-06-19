@@ -190,7 +190,7 @@ function html_to_rst(str)
 {
 	/* delete new line symbols */
 	var retval =  str.replace(/\n/gm, ' ');
-	retval = retval.replace(/<p>/gm, '\n');
+	retval = retval.replace(/<p>/gm, '\n\n');
 
 	retval = retval.replace(/<ul>/gm, '\n\n..\n');
 	retval = retval.replace(/<\/ul>/gm, '\n');
