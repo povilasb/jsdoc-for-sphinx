@@ -91,6 +91,7 @@ Methods
 	else
 		output+=data.returns[0].type + " ";
 	!}{+ data.name +}<if test="get_type(data) != 'Namespace '">{+ makeSignature(data.params) +}</if>
+{+ indentLines(':outertype: ' + data.memberOf, 4) +}
 
 {+ indentLines(resolve_links(data.desc), 4) +}
 
